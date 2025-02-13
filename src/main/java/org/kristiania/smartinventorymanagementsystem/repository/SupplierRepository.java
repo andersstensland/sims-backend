@@ -19,24 +19,26 @@ public class SupplierRepository {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    private RowMapper<Supplier> supplierRowMapper = (rs, rowNum) -> new Supplier(
+    private final RowMapper<Supplier> supplierRowMapper = (rs, rowNum) -> new Supplier(
             rs.getLong("id"),
             rs.getString("name"),
-            rs.getString("contact_details")
+            rs.getString("contact_details"),
+            rs.getString("address"),
+            rs.getString("supplier_history")
     );
 
     public Supplier findById(Long id) {
-        String sql = "SELECT * FROM suppliers WHERE id = ?";
+        String sql = "SELECT * FROM supplier WHERE id = ?";
         return jdbcTemplate.queryForObject(sql, supplierRowMapper, id);
     }
 
     public List<Supplier> findAll() {
-        String sql = "SELECT * FROM suppliers";
+        String sql = "SELECT * FROM supplier";
         return jdbcTemplate.query(sql, supplierRowMapper);
     }
 
     public void save(Supplier supplier) {
-        String sql = "INSERT INTO suppliers (name, contact_details) VALUES (?, ?)";
+        String sql = "INSERT INTO supplier (name, contact_details, address, supplier_history) VALUES (?, ?, ?, ?)";
         try {
             jdbcTemplate.update(sql, supplier.getName(), supplier.getContactDetails());
         } catch (Exception e) {

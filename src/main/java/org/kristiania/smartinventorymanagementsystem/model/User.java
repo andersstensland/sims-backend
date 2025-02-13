@@ -5,8 +5,7 @@ import lombok.*;
 
 @Entity
 @Table(name = "users")
-@Getter
-@Setter
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
@@ -22,5 +21,13 @@ public class User {
     private String password;  // hashed
 
     private String roles; // e.g. "ROLE_USER,ROLE_ADMIN"
+
+    /**
+     * Could also add more fields like:
+     * - String email;
+     * - String firstName;
+     * - String lastName;
+     * - etc.
+     */
 }
 
