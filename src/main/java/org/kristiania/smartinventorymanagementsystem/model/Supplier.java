@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Supplier {
-    private Long id;
+    private int id;
     private String name;
     private String contactDetails;
     // Could also track supply history, address, etc.

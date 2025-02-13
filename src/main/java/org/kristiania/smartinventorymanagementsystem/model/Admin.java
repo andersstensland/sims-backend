@@ -4,7 +4,7 @@ public class Admin extends AbstractUser {
 
     public Admin() {}
 
-    public Admin(Long id, String username, String email) {
+    public Admin(int id, String username, String email) {
         super(id, username, email);
     }
 

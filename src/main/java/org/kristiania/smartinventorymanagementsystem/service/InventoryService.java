@@ -4,7 +4,6 @@ import org.kristiania.smartinventorymanagementsystem.model.Product;
 
 import org.kristiania.smartinventorymanagementsystem.exceptions.LowStockException;
 import org.kristiania.smartinventorymanagementsystem.exceptions.ProductNotFoundException;
-import org.kristiania.smartinventorymanagementsystem.model.Product;
 import org.kristiania.smartinventorymanagementsystem.model.Sale;
 import org.kristiania.smartinventorymanagementsystem.repository.ProductRepository;
 import org.kristiania.smartinventorymanagementsystem.repository.SaleRepository;
@@ -30,11 +29,23 @@ public class InventoryService {
         this.stockAlertNotifier = stockAlertNotifier;
     }
 
+    /**
+     * Operation to add a product to database
+     * @param product you want to add
+     */
     public void addProduct(Product product) {
         productRepository.save(product);
     }
 
-    public void sellProduct(Long productId, int quantity) {
+    /**
+     * Checks if the product exists and if there is enough of the product to sell
+     * Then updates database with new amount
+     * Makes a new sale and saves it to database
+     * Lastly, alerts out if product is under the given threshold
+     * @param productId of product to sell
+     * @param quantity sold of product
+     */
+    public void sellProduct(int productId, int quantity) {
         Product product = productRepository.findById(productId);
         if (product == null) {
             throw new ProductNotFoundException("Product not found: " + productId);

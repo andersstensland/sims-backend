@@ -19,14 +19,25 @@ public class SaleRepository {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    private RowMapper<Sale> saleRowMapper = (rs, rowNum) -> new Sale(
-            rs.getLong("id"),
-            rs.getLong("product_id"),
-            rs.getInt("quantity_sold"),
-            rs.getDouble("total_price"),
-            rs.getTimestamp("sale_date").toLocalDateTime()
+    /**
+     * New instance of rowMapper class. This class is a functional interface, which means that is has one abstract method.
+     * When this new instance is created it specifies that it uses the Sale type.
+     *This method figures out what is at each row of the database. ResultSet points to a row of a table.
+     * Uses the resultSet value and the row number to create a new instance of Sale at each of the different rows
+     * and gets the value of each column of one row. These values are then saved in that rows' instance of Sale
+     **/
+    private RowMapper<Sale> saleRowMapper = (resultSet, rowNum) -> new Sale(
+            resultSet.getInt("id"),
+            resultSet.getInt("product_id"),
+            resultSet.getInt("quantity_sold"),
+            resultSet.getDouble("total_price"),
+            resultSet.getTimestamp("sale_date").toLocalDateTime()
     );
 
+    /**
+     * Inserts arguments into the correct VALUES in the pre-prepared sql statement
+     * @param sale you want to save in database
+     */
     public void save(Sale sale) {
         String sql = "INSERT INTO sales (product_id, quantity_sold, total_price, sale_date) VALUES (?, ?, ?, ?)";
         try {
@@ -40,6 +51,10 @@ public class SaleRepository {
         }
     }
 
+    /**
+     * Inserts arguments into the correct VALUES in the pre-prepared sql statement
+     * @return list of all sales on all rows
+     */
     public List<Sale> findAll() {
         String sql = "SELECT * FROM sales";
         return jdbcTemplate.query(sql, saleRowMapper);

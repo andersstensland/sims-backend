@@ -8,11 +8,11 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Product {
-    private Long id;
+    private int id;
     private String name;
     private int quantity;        // Current stock level
     private double price;
-    private Long supplierId;     // FK referencing Supplier
+    private int supplierId;     // FK referencing Supplier
 
     // Additional fields like category, description, etc.
 }

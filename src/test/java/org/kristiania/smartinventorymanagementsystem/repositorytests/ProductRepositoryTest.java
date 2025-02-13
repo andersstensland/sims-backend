@@ -14,28 +14,28 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @JdbcTest
 @Import({ProductRepository.class})
-class ProductRepositoryTest {
+public class ProductRepositoryTest {
 
     @Autowired
     private ProductRepository productRepository;
 
     @BeforeEach
-    void setUp() {
+    public void setUp() {
         // Insert some test data
-        Product p1 = new Product(null, "Laptop", 10, 999.99, null);
-        Product p2 = new Product(null, "Mouse", 50, 19.99, null);
+        Product p1 = new Product(1, "Laptop", 10, 999.99, 101);
+        Product p2 = new Product(2, "Mouse", 50, 19.99, 102);
         productRepository.save(p1);
         productRepository.save(p2);
     }
 
     @Test
-    void testFindAll() {
+    public void testFindAll() {
         List<Product> products = productRepository.findAll();
         assertEquals(2, products.size());
     }
 
     @Test
-    void testUpdateProduct() {
+    public void testUpdateProduct() {
         Product product = productRepository.findAll().get(0);
         product.setQuantity(5);
         productRepository.update(product);
@@ -43,5 +43,15 @@ class ProductRepositoryTest {
         Product updated = productRepository.findById(product.getId());
         assertEquals(5, updated.getQuantity());
     }
+
+    @Test
+    public void createTestProduct() {
+        Product product1 = new Product(1, "Laptop", 10, 999.99, 101);
+        Product product2 = new Product(2, "Mouse", 50, 19.99, 102);
+
+        System.out.println("Product 1: " + product1);
+        System.out.println("Product 2: " + product2);
+    }
+
 }
 
