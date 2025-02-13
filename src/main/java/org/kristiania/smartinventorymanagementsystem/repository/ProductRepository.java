@@ -20,16 +20,18 @@ public class ProductRepository {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    private RowMapper<Product> productRowMapper = (rs, rowNum) -> new Product(
+    private final RowMapper<Product> productRowMapper = (rs, rowNum) -> new Product(
             rs.getLong("id"),
             rs.getString("name"),
             rs.getInt("quantity"),
             rs.getDouble("price"),
-            rs.getLong("supplier_id")
+            rs.getLong("supplier_id"),
+            rs.getString("description"),
+            rs.getString("category")
     );
 
     public Product findById(Long id) {
-        String sql = "SELECT * FROM products WHERE id = ?";
+        String sql = "SELECT * FROM product WHERE id = ?";
         try {
             return jdbcTemplate.queryForObject(sql, productRowMapper, id);
         } catch (Exception e) {
@@ -38,32 +40,37 @@ public class ProductRepository {
     }
 
     public List<Product> findAll() {
-        String sql = "SELECT * FROM products";
+        String sql = "SELECT * FROM product";
         return jdbcTemplate.query(sql, productRowMapper);
     }
 
     public void save(Product product) {
-        String sql = "INSERT INTO products (name, quantity, price, supplier_id) VALUES (?, ?, ?, ?)";
+        String sql = "INSERT INTO product (name, quantity, price, supplier_id, description, category) VALUES (?, ?, ?, ?, ?, ?)";
         try {
             jdbcTemplate.update(sql,
                     product.getName(),
                     product.getQuantity(),
                     product.getPrice(),
-                    product.getSupplierId());
+                    product.getSupplierId(),
+                    product.getDescription(),
+                    product.getCategory()
+            );
         } catch (Exception e) {
             throw new DatabaseException("Error saving product", e);
         }
     }
 
     public void update(Product product) {
-        String sql = "UPDATE products SET name=?, quantity=?, price=?, supplier_id=? WHERE id=?";
+        String sql = "UPDATE product SET name=?, quantity=?, price=?, supplier_id=?,  description=?, category=? WHERE id=?";
         try {
             int rows = jdbcTemplate.update(sql,
                     product.getName(),
                     product.getQuantity(),
                     product.getPrice(),
                     product.getSupplierId(),
-                    product.getId());
+                    product.getId(),
+                    product.getDescription(),
+                    product.getCategory());
             if (rows == 0) {
                 throw new ProductNotFoundException("No product found with id " + product.getId());
             }
@@ -73,7 +80,7 @@ public class ProductRepository {
     }
 
     public void deleteById(Long id) {
-        String sql = "DELETE FROM products WHERE id=?";
+        String sql = "DELETE FROM product WHERE id=?";
         jdbcTemplate.update(sql, id);
     }
 }

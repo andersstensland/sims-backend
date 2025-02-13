@@ -6,8 +6,6 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.List;
 
 @Repository
@@ -19,29 +17,34 @@ public class SaleRepository {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    private RowMapper<Sale> saleRowMapper = (rs, rowNum) -> new Sale(
+    private final RowMapper<Sale> saleRowMapper = (rs, rowNum) -> new Sale(
             rs.getLong("id"),
             rs.getLong("product_id"),
             rs.getInt("quantity_sold"),
             rs.getDouble("total_price"),
-            rs.getTimestamp("sale_date").toLocalDateTime()
+            rs.getTimestamp("sale_date").toLocalDateTime(),
+            rs.getString("customer"),
+            rs.getDouble("discount")
     );
 
     public void save(Sale sale) {
-        String sql = "INSERT INTO sales (product_id, quantity_sold, total_price, sale_date) VALUES (?, ?, ?, ?)";
+        String sql = "INSERT INTO sale (product_id, quantity_sold, total_price, sale_date, customer, discount) VALUES (?, ?, ?, ?, ?, ?)";
         try {
             jdbcTemplate.update(sql,
                     sale.getProductId(),
                     sale.getQuantitySold(),
                     sale.getTotalPrice(),
-                    sale.getSaleDate());
+                    sale.getSaleDate(),
+                    sale.getCustomer(),
+                    sale.getDiscount()
+            );
         } catch (Exception e) {
             throw new DatabaseException("Error saving sale", e);
         }
     }
 
     public List<Sale> findAll() {
-        String sql = "SELECT * FROM sales";
+        String sql = "SELECT * FROM sale";
         return jdbcTemplate.query(sql, saleRowMapper);
     }
 

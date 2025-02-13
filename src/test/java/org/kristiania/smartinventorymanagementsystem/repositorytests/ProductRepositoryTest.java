@@ -22,10 +22,7 @@ class ProductRepositoryTest {
     @BeforeEach
     void setUp() {
         // Insert some test data
-        Product p1 = new Product(null, "Laptop", 10, 999.99, null);
-        Product p2 = new Product(null, "Mouse", 50, 19.99, null);
-        productRepository.save(p1);
-        productRepository.save(p2);
+        // Create product
     }
 
     @Test
